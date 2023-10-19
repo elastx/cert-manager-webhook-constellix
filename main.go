@@ -3,21 +3,23 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/Constellix/constellix-go-client/client"
-	"github.com/Constellix/constellix-go-client/models"
-	"io/ioutil"
 	"os"
-	"strconv"
 	"strings"
+	"strconv"
+	"io/ioutil"
+	"context"
 
-	cmmeta "github.com/jetstack/cert-manager/pkg/apis/meta/v1"
-	extapi "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
+	cmmeta "github.com/cert-manager/cert-manager/pkg/apis/meta/v1"
+	extapi "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 
-	"github.com/jetstack/cert-manager/pkg/acme/webhook/apis/acme/v1alpha1"
-	"github.com/jetstack/cert-manager/pkg/acme/webhook/cmd"
-	"github.com/jetstack/cert-manager/pkg/issuer/acme/dns/util"
+	"github.com/cert-manager/cert-manager/pkg/acme/webhook/apis/acme/v1alpha1"
+	"github.com/cert-manager/cert-manager/pkg/acme/webhook/cmd"
+	"github.com/cert-manager/cert-manager/pkg/issuer/acme/dns/util"
+
+	"github.com/Constellix/constellix-go-client/client"
+	"github.com/Constellix/constellix-go-client/models"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -211,7 +213,7 @@ func (c *constellixDNSProviderSolver) setConstellixClient(ch *v1alpha1.Challenge
 	}
 
 	secret, err := c.k8sClient.CoreV1().Secrets(ch.ResourceNamespace).Get(
-		apiKeyRef.Name, metav1.GetOptions{},
+		context.TODO(), apiKeyRef.Name, metav1.GetOptions{},
 	)
 	if err != nil {
 		return err
@@ -243,7 +245,7 @@ func (c *constellixDNSProviderSolver) setConstellixClient(ch *v1alpha1.Challenge
 	}
 
 	secret, err = c.k8sClient.CoreV1().Secrets(ch.ResourceNamespace).Get(
-		secretKeyRef.Name, metav1.GetOptions{},
+		context.TODO(), secretKeyRef.Name, metav1.GetOptions{},
 	)
 	if err != nil {
 		return err
@@ -276,7 +278,7 @@ func (c *constellixDNSProviderSolver) parseChallenge(ch *v1alpha1.ChallengeReque
 	}
 	zone = util.UnFqdn(zone)
 
-	if idx := strings.Index(ch.ResolvedFQDN, "."+ch.ResolvedZone); idx != -1 {
+	if idx := strings.Index(ch.ResolvedFQDN, "." + ch.ResolvedZone); idx != -1 {
 		domain = ch.ResolvedFQDN[:idx]
 	} else {
 		domain = util.UnFqdn(ch.ResolvedFQDN)

@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/jetstack/cert-manager/test/acme/dns"
+	"github.com/cert-manager/cert-manager/test/acme"
 )
 
 var (
@@ -16,7 +16,7 @@ func TestRunsSuite(t *testing.T) {
 	// snippet of valid configuration that should be included on the
 	// ChallengeRequest passed as part of the test cases.
 
-	fixture := dns.NewFixture(&ns1DNSProviderSolver{},
+	fixture := acme.dns.NewFixture(&ns1DNSProviderSolver{},
 		dns.SetResolvedZone(zone),
 		dns.SetAllowAmbientCredentials(false),
 		dns.SetManifestPath("testdata/ns1"),
